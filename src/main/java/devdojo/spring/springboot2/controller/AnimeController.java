@@ -1,6 +1,8 @@
 package devdojo.spring.springboot2.controller;
 
 import devdojo.spring.springboot2.domain.Anime;
+import devdojo.spring.springboot2.requests.AnimePostRequestBody;
+import devdojo.spring.springboot2.requests.AnimePutRequestBody;
 import devdojo.spring.springboot2.service.AnimeService;
 import devdojo.spring.springboot2.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +38,17 @@ public class AnimeController {
     //La vc colocou never, mas pode colocar on_param, para se acessar a url com o id + ?trace=true, ai ele mostra o stacktrace.
     @GetMapping(path = "/{id}") //Assim vc pode fazer o findById, e o numero que colocar de id no fim da url vai ser procurado.
     public ResponseEntity<Anime> findById(@PathVariable long id){
-        return ResponseEntity.ok(animeService.findById(id));
+        return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
+    }
+
+    @GetMapping(path = "/find") //Vc precisa mudar o caminho, pois tem 2 gets. A url fica http://localhost:8080/animes/find?name=OnePizza
+    public ResponseEntity <List<Anime>> findByName(@RequestParam(required = false) String name){ //O request param usa o nome que vc der ali pra pesquisar por nome.
+        return ResponseEntity.ok(animeService.findByName(name));
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime anime){ //Pra vc fazer o post, vc passa um json so com o nome, e o metodo gera o id e cria o objeto.
-        return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody){ //Pra vc fazer o post, vc passa um json so com o nome, e o metodo gera o id e cria o objeto.
+        return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}") //Metodo idempotente: nao importa quantas vezes executar no servidor, a resposta é sempre a mesma. O delete pode ser e pode nao ser.
@@ -51,8 +58,8 @@ public class AnimeController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Anime anime){ //Metodo idempotente, sempre vai ter a mesma resposta no servidor independente de quantas vzes for executado.
-        animeService.replace(anime);
+    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBody animePutRequestBody){ //Metodo idempotente, sempre vai ter a mesma resposta no servidor independente de quantas vzes for executado.
+        animeService.replace(animePutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
