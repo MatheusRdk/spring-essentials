@@ -8,6 +8,8 @@ import devdojo.spring.springboot2.util.DateUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +25,9 @@ public class AnimeController {
     private final DateUtil dateUtil;  //Vc cria e faz injeção de dependencia, nao inicia um objeto direto aqui.
     private final AnimeService animeService;
     @GetMapping //Isso faz o /animes acessar o retorno desse método, pq é o unico get.
-    public ResponseEntity<List<Anime>> list(){
+    public ResponseEntity<Page<Anime>> list(Pageable pageable){
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return new ResponseEntity<>(animeService.listAll(), HttpStatus.OK); //Vc esta retornando esse ReponseEntity pq é normal retornar mais algumas informções.
+        return new ResponseEntity<>(animeService.listAll(pageable), HttpStatus.OK); //Vc esta retornando esse ReponseEntity pq é normal retornar mais algumas informções.
     }
     //Com o hotswap depois que vc colocou a dependencia spring-devtools, vc n precisa parar e iniciar a aplicaçao pra ver mudanças, so dar um build(Ctrl+F9)
 //    @GetMapping(path = "list2")

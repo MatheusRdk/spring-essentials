@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @ControllerAdvice
-public class RestExceptionHandler {  //O handler "intercepta" as exceções e diz o que deve ser feito.
+public class RestExceptionHandler {//extends ResponseEntityExceptionHandler {  //O handler "intercepta" as exceções e diz o que deve ser feito. Essa classe extendida tem handlers
+    //proprios pra varias exceções, vc pode sobreescreve-las.
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<BadRequestExceptionDetails> handlerBadRequestException(BadRequestException bre){
         return new ResponseEntity<>(
@@ -46,4 +48,19 @@ public class RestExceptionHandler {  //O handler "intercepta" as exceções e di
                         .fieldsMessage(fieldsMessage)
                         .build(), HttpStatus.BAD_REQUEST);
     }
+
+//    @Override
+//    public ResponseEntity<Object> handleExceptionInternal(
+//            Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+//
+//        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
+//                .timestamp(LocalDateTime.now())
+//                .status(statusCode.value())
+//                .title(ex.getCause().getMessage())
+//                .details(ex.getMessage())
+//                .developerMessage(ex.getClass().getName())
+//                .build();
+//
+//        return new ResponseEntity<>(exceptionDetails, headers, statusCode);
+//    }
 }
