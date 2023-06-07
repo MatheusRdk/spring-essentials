@@ -5,6 +5,7 @@ import devdojo.spring.springboot2.requests.AnimePostRequestBody;
 import devdojo.spring.springboot2.requests.AnimePutRequestBody;
 import devdojo.spring.springboot2.service.AnimeService;
 import devdojo.spring.springboot2.util.DateUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,8 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody){ //Pra vc fazer o post, vc passa um json so com o nome, e o metodo gera o id e cria o objeto.
+    public ResponseEntity<Anime> save(@RequestBody @Valid AnimePostRequestBody animePostRequestBody){ //Pra vc fazer o post, vc passa um json so com o nome, e o metodo
+        // gera o id e cria o objeto. A anotaçao valid é do spring-boot-starter-validation, pros campos que nao podem ser nulos.
         return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 

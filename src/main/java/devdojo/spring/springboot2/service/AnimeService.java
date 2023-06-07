@@ -6,6 +6,7 @@ import devdojo.spring.springboot2.mapper.AnimeMapper;
 import devdojo.spring.springboot2.repository.AnimeRepository;
 import devdojo.spring.springboot2.requests.AnimePostRequestBody;
 import devdojo.spring.springboot2.requests.AnimePutRequestBody;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class AnimeService {
 //                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not found.")); //Muitos usam tambem um retorno do erro 404.
     }
 
+    @Transactional//(rollbackFor = Exception.class) //Quando vc usa isso, se houver uma exceção no meio do método, ele nao será executado por completo. Por ex.: Se vc salvar
+    // um anime com esse metodo e der uma exceção (que nao impessa a criação do objeto anime no banco de dados), ele vai ser criado igual. Se tiver essa anotação,
+    // nao será salvo. Ele "cancela" a transação. O rollbackFor com exception.class faz isso funcionar pra excecoes do tipo checked tambem.
     public Anime save(AnimePostRequestBody animePostRequestBody){
         return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
     }
