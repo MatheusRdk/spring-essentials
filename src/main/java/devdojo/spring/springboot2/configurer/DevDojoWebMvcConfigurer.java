@@ -2,7 +2,6 @@ package devdojo.spring.springboot2.configurer;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Configuration
-public class DevDojoWebMvnConfigurer implements WebMvcConfigurer { //Configura a paginaçao (quantos elementos exibidos por pag) da api.
+public class DevDojoWebMvcConfigurer implements WebMvcConfigurer { //Configura a paginaçao (quantos elementos exibidos por pag) da api.
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         PageableHandlerMethodArgumentResolver pageHandler = new PageableHandlerMethodArgumentResolver();

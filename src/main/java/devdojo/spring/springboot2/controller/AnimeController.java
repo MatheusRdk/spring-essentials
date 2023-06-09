@@ -29,6 +29,12 @@ public class AnimeController {
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return new ResponseEntity<>(animeService.listAll(pageable), HttpStatus.OK); //Vc esta retornando esse ReponseEntity pq é normal retornar mais algumas informções.
     }
+
+    @GetMapping(path = "/all") //Isso faz o /animes acessar o retorno desse método, pq é o unico get.
+    public ResponseEntity<List<Anime>> listAll(){
+        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
+        return new ResponseEntity<>(animeService.listAllNonPageable(), HttpStatus.OK); //Vc esta retornando esse ReponseEntity pq é normal retornar mais algumas informções.
+    }
     //Com o hotswap depois que vc colocou a dependencia spring-devtools, vc n precisa parar e iniciar a aplicaçao pra ver mudanças, so dar um build(Ctrl+F9)
 //    @GetMapping(path = "list2")
 //    public List<Anime> list2(){
