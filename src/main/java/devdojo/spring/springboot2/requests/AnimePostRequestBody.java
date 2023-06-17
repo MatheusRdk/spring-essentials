@@ -3,11 +3,15 @@ package devdojo.spring.springboot2.requests;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AnimePostRequestBody { //Classe DTO
     @NotEmpty(message = "The anime name cannot be empty.")  //Anotaçoes do spring-boot-starter-validation pra campos que nao podem ser nulos nem vazios.
     @NotNull(message = "The anime name cannot be null.")
