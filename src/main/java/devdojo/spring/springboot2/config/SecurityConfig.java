@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static devdojo.spring.springboot2.config.MyCustomDsl.customDsl;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -21,12 +22,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Log4j2
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authz) -> authz
-                .anyRequest().authenticated()
-        ).httpBasic(withDefaults());
-        return http.build();
+    @Configuration
+    @EnableWebSecurity
+    public static class Config {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            http
+                    .apply(customDsl())
+                    .flag(true)
+                    .and();
+            return http.build();
+        }
     }
 
     @Bean
