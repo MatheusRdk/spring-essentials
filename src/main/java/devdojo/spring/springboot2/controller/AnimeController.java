@@ -4,12 +4,10 @@ import devdojo.spring.springboot2.domain.Anime;
 import devdojo.spring.springboot2.requests.AnimePostRequestBody;
 import devdojo.spring.springboot2.requests.AnimePutRequestBody;
 import devdojo.spring.springboot2.service.AnimeService;
-import devdojo.spring.springboot2.util.DateUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -21,7 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController //Isso diz que essa classe retorna apenas strings. Isso é o que api's retornam.
@@ -72,13 +70,12 @@ public class AnimeController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Anime> save(@RequestBody @Valid AnimePostRequestBody animePostRequestBody){ //Pra vc fazer o post, vc passa um json so com o nome, e o metodo
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody){ //Pra vc fazer o post, vc passa um json so com o nome, e o metodo
         // gera o id e cria o objeto. A anotaçao valid é do spring-boot-starter-validation, pros campos que nao podem ser nulos.
         return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/{id}") //Metodo idempotente: nao importa quantas vezes executar no servidor, a resposta é sempre a mesma. O delete pode ser e pode nao ser.
+    @DeleteMapping(path = "/admin/{id}") //Metodo idempotente: nao importa quantas vezes executar no servidor, a resposta é sempre a mesma. O delete pode ser e pode nao ser.
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successful operation"),
             @ApiResponse(responseCode = "400", description = "When anime does not exist in the database"),

@@ -1,12 +1,16 @@
 package devdojo.spring.springboot2.domain;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 
 @Data //Get, set, equals hashcode, tostring...
 @AllArgsConstructor //Construtores com todos atributos.
@@ -19,6 +23,6 @@ public class Anime {
     private Long id;
     //@Column(nullable = false) //Isso faz com que o name nao possa ser nulo. Mas so funciona se ainda nao tiver criado um bd, tem ser um novo.
     //Pra fazer isso no bd que ja existe, precisa da dependencia spring-boot-starter-validation
-    @NotEmpty(message = "The anime name cannot be empty.")
+    @NotEmpty(message = "The anime's name cannot be null")
     private String name;
 }

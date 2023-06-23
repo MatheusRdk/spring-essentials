@@ -1,6 +1,5 @@
 package devdojo.spring.springboot2.util;
 
-import devdojo.spring.springboot2.requests.AnimePostRequestBody;
 import devdojo.spring.springboot2.requests.AnimePutRequestBody;
 
 public class AnimePutRequestBodyCreator {
@@ -9,5 +8,6 @@ public class AnimePutRequestBodyCreator {
                 .name(AnimeCreator.createValidUpdatedAnime().getName())
                 .id(AnimeCreator.createValidUpdatedAnime().getId())
                 .build();
+
     }
 }

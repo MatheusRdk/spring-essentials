@@ -1,48 +1,53 @@
 package devdojo.spring.springboot2.config;
 
+import devdojo.spring.springboot2.service.DevDojoUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
-
-import static devdojo.spring.springboot2.config.MyCustomDsl.customDsl;
 
 @Configuration
 @EnableWebSecurity
 @Log4j2
-public class SecurityConfig {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-        @Configuration
-    @EnableWebSecurity
-    public static class Config {
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http
-                    .apply(customDsl())
-                    .flag(true)
-                    .and();
-            return http.build();
-        }
+    private final DevDojoUserDetailsService devDojoUserDetailsService;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable().authorizeRequests()
+                .antMatchers("/animes/admin/**").hasRole("ADMIN") //Sempre o mais restritivo primeiro.
+                .antMatchers("/animes/**").hasRole("USER")
+                .anyRequest()
+                .authenticated()
+                .and()
+                .formLogin()
+                .and()
+                .httpBasic();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        UserDetails user = User.withUsername("user")
-                .password(encoder.encode("test"))
-                .roles("ADMIN")
-                .build();
-        UserDetails user2 = User.withUsername("user2")
-                .password(encoder.encode("test2"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user, user2);
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        PasswordEncoder delegatingPasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        log.info("Password encoded {}", delegatingPasswordEncoder.encode("testbd"));
+
+        auth.inMemoryAuthentication()
+                .withUser("matheus1")
+                .password(delegatingPasswordEncoder.encode("test"))
+                .roles("USER", "ADMIN")
+                .and()
+                .withUser("matheus2")
+                .password(delegatingPasswordEncoder.encode("test"))
+                .roles("USER");
+
+        auth.userDetailsService(devDojoUserDetailsService).passwordEncoder(delegatingPasswordEncoder);
     }
 }

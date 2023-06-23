@@ -6,7 +6,6 @@ import devdojo.spring.springboot2.repository.AnimeRepository;
 import devdojo.spring.springboot2.util.AnimeCreator;
 import devdojo.spring.springboot2.util.AnimePostRequestBodyCreator;
 import devdojo.spring.springboot2.util.AnimePutRequestBodyCreator;
-import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
